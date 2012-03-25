@@ -1,0 +1,12 @@
+body{
+	font-size:14pt;
+	font-family:sans-serif;
+	line-height:1.2em;
+}
+
+
+input{
+	outline:none;
+	border:1px solid black;
+	font-size:14pt;
+}
