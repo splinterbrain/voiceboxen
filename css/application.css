@@ -12,3 +12,15 @@ input{
 	border:1px solid black;
 	font-size:14pt;
 }
+
+#results > li{
+	clear:both;
+}
+
+#results > li > input{
+	float:right;
+}
+
+.song_title{
+	float:left;
+}
