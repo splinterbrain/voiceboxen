@@ -1,30 +1,34 @@
-.clear{
-	clear:both;
+.clear {
+	clear: both;
+}
+body {
+	font-size: 14pt;
+	font-family: sans-serif;
+	line-height: 1.2em;
+	width: 100%;
+	max-width: 480px;
+	padding: 10px;
+}
+input {
+	outline: none;
+	border: 1px solid black;
+	font-size: 14pt;
+	padding: 3px;
+}
+#results > li {
+	clear: both;
+}
+#results > li > input {
+	float: right;
+}
+.song {
+	margin-left: 1em;
 }
 
-body{
-	font-size:14pt;
-	font-family:sans-serif;
-	line-height:1.2em;
-	width:100%;
-	padding:10px;
+.sing.queued{
+	background-color:green;
 }
-
-
-input{
-	outline:none;
-	border:1px solid black;
-	font-size:14pt;
-}
-
-#results > li{
-	clear:both;
-}
-
-#results > li > input{
-	float:right;
-}
-
-.song_title{
-	float:left;
+.song_title {
+	padding: 4px;
+	float: left;
 }
