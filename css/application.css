@@ -18,17 +18,33 @@ input {
 #results > li {
 	clear: both;
 }
-#results > li > input {
+#results > li > .inputs {
 	float: right;
+	white-space:nowrap;
 }
+#results > li > .inputs > input{
+	float: left;
+}
+.artist{
+	background-color:black;
+	color:white;
+	padding:3px;
+}
+
 .song {
-	margin-left: 1em;
+	margin-left: 1em;	
 }
+
+.song_title {
+	padding: 4px;
+	float: left;
+}
+
 
 .sing.queued{
 	background-color:green;
 }
-.song_title {
-	padding: 4px;
-	float: left;
+
+.sing_later{
+	margin-right:0px;
 }
