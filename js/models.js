@@ -33,6 +33,8 @@ $(function() {
 		el : $("#application")
 	});
 	VOICEBOXEN.room_code = '';
+	VOICEBOXEN.PARSE_APP_ID = "wr0JaM2SXMbwTX1Q142F8lFI29elxoPYjE768BEB";
+	VOICEBOXEN.PARSE_API_KEY = "HpQBA0WQ2Cxl8FFoGk5QKP3h33wL9LVPGiuwRtJ1";
 
 	VOICEBOXEN.Song = Backbone.Model.extend({
 		parse : function(resp) {
@@ -49,7 +51,9 @@ $(function() {
 		className : "song",
 		template : _.template($("#song-template").html()),
 		events : {
-			"click .sing" : "queue"
+			"click .sing" : "sing",
+			"click .sing_later" : "singLater"
+			
 		},
 
 		render : function() {
@@ -58,8 +62,8 @@ $(function() {
 			this.$el.data("artist", this.model.get("artist"));
 			return this;
 		},
-		queue : function() {
-			if(this.$el.hasClasS("queued")) return;
+		sing : function() {
+			if(this.$el.hasClass("queued")) return;
 			if(VOICEBOXEN.room_code == ''){
 				var code = prompt("Please enter your room code");
 				if(code !== null && code !== ''){
@@ -82,9 +86,12 @@ $(function() {
 			}).error(function(resp) {
 				if(resp.status == 403){
 					VOICEBOXEN.room_code = '';
-					this.queue();
+					this.sing();
 				}
 			});
+		},
+		singLater : function(){
+			
 		}
 	});
 
