@@ -37,6 +37,13 @@ $(function() {
 	VOICEBOXEN.PARSE_API_KEY = "HpQBA0WQ2Cxl8FFoGk5QKP3h33wL9LVPGiuwRtJ1";
 
 	VOICEBOXEN.Song = Backbone.Model.extend({
+		initialize : function(attr){
+			if(isNaN(attr.vbid) && !isNaN(attr.id)) {
+				//We map the vbid from Voicebo queries to vbid for Parse
+				this.set({vbid : attr.id});
+			}
+		},
+		
 		parse : function(resp) {
 			if(isNaN(resp.vbid) && !isNaN(resp.id)) {
 				//We map the vbid from Voicebo queries to vbid for Parse
@@ -83,12 +90,12 @@ $(function() {
 				success : function(resp) {
 					this.$el.addClass("queued");
 				}
-			}).error(function(resp) {
+			}).error($.proxy(function(resp) {
 				if(resp.status == 403){
 					VOICEBOXEN.room_code = '';
 					this.sing();
 				}
-			});
+			}, this));
 		},
 		singLater : function(){
 			
