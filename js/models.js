@@ -1,15 +1,74 @@
 $(function() {
 
-	var VoiceBoxen = Backbone.View.extend({
+	window.VOICEBOXEN = {};
+	VOICEBOXEN.PARSE_APP_ID = "wr0JaM2SXMbwTX1Q142F8lFI29elxoPYjE768BEB";
+	VOICEBOXEN.PARSE_API_KEY = "HpQBA0WQ2Cxl8FFoGk5QKP3h33wL9LVPGiuwRtJ1";
+
+	VOICEBOXEN.ParseSync = function(method, model, options) {
+		return Backbone.sync(method, model, _.extend(options, {
+			headers : {
+				"X-Parse-Application-Id" : VOICEBOXEN.PARSE_APP_ID,
+				"X-Parse-REST-API-Key" : VOICEBOXEN.PARSE_API_KEY
+			}
+		}));
+	};
+
+	VOICEBOXEN.Application = Backbone.View.extend({
 		events : {
 			"submit #search_form" : "search",
-			"click #search_submit" : "search"
-
+			"click #search_submit" : "search",
+			"click #signup_submit" : "signup",
+			"click #login_submit" : "login",
+			"click #logout_submit" : "logout"
 		},
 
 		initialize : function() {
-			var submit = this.$el.find("#search_form");
-			submit.on("submit", this.search, this);
+		},
+		signup : function() {
+			$.ajax({
+				url : "https://api.parse.com/1/users",
+				type : "POST",
+				data : JSON.stringify({
+					username : this.$el.find("#username").val(),
+					password : this.$el.find("#password").val()
+				}),
+				contentType : "application/json",
+				dataType : "json",
+				headers : {
+					"X-Parse-Application-Id" : VOICEBOXEN.PARSE_APP_ID,
+					"X-Parse-REST-API-Key" : VOICEBOXEN.PARSE_API_KEY
+				},
+				success : $.proxy(function(resp) {
+					var user = new VOICEBOXEN.User(resp);
+					this.user = user;
+				}, this)
+			}).error(function(resp) {
+				alert("Sorry, there was a problem creating that user");
+			});
+		},
+		login : function() {
+			$.ajax({
+				url : "https://api.parse.com/1/login",
+				type : "GET",
+				data : {
+					username : this.$el.find("#username").val(),
+					password : this.$el.find("#password").val()
+				},
+				dataType : "json",
+				headers : {
+					"X-Parse-Application-Id" : VOICEBOXEN.PARSE_APP_ID,
+					"X-Parse-REST-API-Key" : VOICEBOXEN.PARSE_API_KEY
+				},
+				success : $.proxy(function(resp) {
+					var user = new VOICEBOXEN.User(resp);
+					this.user = user;
+				}, this)
+			}).error(function(resp) {
+				alert("Sorry, there was a problem logging in that user");
+			});
+		},
+		logout : function() {
+			this.user = null;
 		},
 		search : function(e) {
 			var q = $("#search").serialize();
@@ -29,21 +88,27 @@ $(function() {
 		}
 	});
 
-	window.VOICEBOXEN = new VoiceBoxen({
+	window.VoiceBoxen = new VOICEBOXEN.Application({
 		el : $("#application")
 	});
-	VOICEBOXEN.room_code = '';
-	VOICEBOXEN.PARSE_APP_ID = "wr0JaM2SXMbwTX1Q142F8lFI29elxoPYjE768BEB";
-	VOICEBOXEN.PARSE_API_KEY = "HpQBA0WQ2Cxl8FFoGk5QKP3h33wL9LVPGiuwRtJ1";
+	VoiceBoxen.room_code = '';
+	VoiceBoxen.user = null;
+
+	VOICEBOXEN.User = Backbone.Model.extend({
+		
+	});
 
 	VOICEBOXEN.Song = Backbone.Model.extend({
-		initialize : function(attr){
+		sync : VOICEBOXEN.ParseSync,
+
+		initialize : function(attr) {
 			if(isNaN(attr.vbid) && !isNaN(attr.id)) {
 				//We map the vbid from Voicebo queries to vbid for Parse
-				this.set({vbid : attr.id});
+				this.set({
+					vbid : attr.id
+				});
 			}
 		},
-		
 		parse : function(resp) {
 			if(isNaN(resp.vbid) && !isNaN(resp.id)) {
 				//We map the vbid from Voicebo queries to vbid for Parse
@@ -60,7 +125,7 @@ $(function() {
 		events : {
 			"click .sing" : "sing",
 			"click .sing_later" : "singLater"
-			
+
 		},
 
 		render : function() {
@@ -70,12 +135,13 @@ $(function() {
 			return this;
 		},
 		sing : function() {
-			if(this.$el.hasClass("queued")) return;
-			if(VOICEBOXEN.room_code == ''){
+			if(this.$el.hasClass("queued"))
+				return;
+			if(VoiceBoxen.room_code == '') {
 				var code = prompt("Please enter your room code");
-				if(code !== null && code !== ''){
-					VOICEBOXEN.room_code = code;
-				}else{
+				if(code !== null && code !== '') {
+					VoiceBoxen.room_code = code;
+				} else {
 					return;
 				}
 			}
@@ -84,21 +150,21 @@ $(function() {
 				type : "POST",
 				data : {
 					song_id : this.model.get("vbid"),
-					room_code : VOICEBOXEN.room_code
+					room_code : VoiceBoxen.room_code
 				},
 				dataType : "json",
 				success : function(resp) {
 					this.$el.addClass("queued");
 				}
 			}).error($.proxy(function(resp) {
-				if(resp.status == 403){
-					VOICEBOXEN.room_code = '';
+				if(resp.status == 403) {
+					VoiceBoxen.room_code = '';
 					this.sing();
 				}
 			}, this));
 		},
-		singLater : function(){
-			
+		singLater : function() {
+
 		}
 	});
 
@@ -106,7 +172,7 @@ $(function() {
 		model : VOICEBOXEN.Song
 	});
 
-	VOICEBOXEN.results = new VOICEBOXEN.Results();
+	VoiceBoxen.results = new VOICEBOXEN.Results();
 
 	VOICEBOXEN.ResultsView = Backbone.View.extend({
 		initialize : function() {
@@ -130,13 +196,13 @@ $(function() {
 		}
 	});
 
-	VOICEBOXEN.resultsView = new VOICEBOXEN.ResultsView({
-		collection : VOICEBOXEN.results,
+	VoiceBoxen.resultsView = new VOICEBOXEN.ResultsView({
+		collection : VoiceBoxen.results,
 		el : $("#results")
 	});
 
 	var test = JSON.parse($("#testdata").html());
-	VOICEBOXEN.results.reset(test.songs);
-	// VOICEBOXEN.resultsView.render();
+	VoiceBoxen.results.reset(test.songs);
+	// VoiceBoxen.resultsView.render();
 
 });

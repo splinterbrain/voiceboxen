@@ -24,9 +24,15 @@ input {
 }
 #results > li > .inputs > input{
 	float: left;
+	background-color:#ffd300;
+	background-image:-webkit-linear-gradient(top, #ffd300, #ffde60);
+	border:1px solid #06266f;
 }
+
+
 .artist{
-	background-color:black;
+	background-color:#06266f;
+	color:#ffe773;
 	color:white;
 	padding:3px;
 }
@@ -47,4 +53,31 @@ input {
 
 .sing_later{
 	margin-right:0px;
+}
+
+#popup {
+	position:absolute;
+	border:1px solid black;
+	width:70%;
+	top:50px;
+	left: 15%;
+	background-color:white;
+}
+
+#popup > label{
+	float:right;
+}
+
+#popup > input{
+	float:right;
+}
+
+
+#popup > .inputs{
+	float:right;
+	clear:right;
+}
+
+#popup > .inputs > input{
+	float:right;
 }
