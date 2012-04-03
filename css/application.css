@@ -2,7 +2,7 @@
 	clear: both;
 }
 html {
-	height: 100%;
+min-height:100%;
 }
 body {
 	font-size: 14pt;
@@ -32,7 +32,7 @@ nav > a {
 	color: white;
 	display: block;
 	float: left;
-	width: 32%;
+	width: 32% !important;
 	text-align: center;
 	margin-left: 2%;
 	background-color: rgba(0,0,0,0.3);
@@ -42,6 +42,18 @@ nav > a {
 	font-size: 20px;
 	padding: 5px;
 }
+
+nav > [class^="icon-"]:before{
+	font-weight:100;
+	font-size:0.9em;
+	left:-.5em;
+	position:relative;
+}
+
+nav > .icon-music:before{
+	left:-.25em;
+}
+
 nav > a:first-child {
 	margin-left: 0px;
 }
@@ -60,7 +72,12 @@ input {
 
 #search {
 	float: left;
-	width: 80%;
+	width: 79%;
+	margin-right:1%;
+	margin-top:2px;
+	box-shadow: 0px 0px 3px 0px white;
+	font-size:.9em;
+	
 }
 
 #search_submit {
