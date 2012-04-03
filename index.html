@@ -12,6 +12,7 @@
 		<!-- 		<link rel="shortcut icon" href="/favicon.ico" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" /> -->
 		<!-- CSS -->
+		<link rel="stylesheet" href="css/font-awesome.css">
 		<link href="css/reset.css" rel="stylesheet" type="text/css"/>
 		<link href="css/application.css" rel="stylesheet" type="text/css"/>
 		<!-- Javascript libraries -->
@@ -25,20 +26,21 @@
 	<body>
 		<div>
 			<header>
-				<h1>Voiceboxen - An Enhanced Voicebox Experience</h1>
+				<h1>Voiceboxen</h1>
 			</header>
-			<!-- 			<nav>
+<!-- 				<input type="submit" id="logout_submit" value="logout" /> -->			<!-- 			<nav>
 			<ul>
 			<li>Search</li>
 			<li>My Library</li>
 			</ul>
 			</nav> -->
 			<section id="application">
+				<nav><a href="#recent">recent</a><a class="icon-music" href="#queued">queued</a><a href="#saved">saved</a><div class="clear"></div></nav>				
 				<form id="search_form">
 					<input type="text" id="search" name="query">
-					<input type="submit" id="search_submit" value="Search">
+					<input type="submit" id="search_submit" value="search">
+					<div class="clear"></div>
 				</form>
-				<input type="submit" id="logout_submit" value="logout" />
 				<ul id="results"></ul>
 				<div class="clear"></div>
 				<section id="popup">
