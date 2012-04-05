@@ -4,11 +4,13 @@ $(function() {
 	VOICEBOXEN.PARSE_APP_ID = "wr0JaM2SXMbwTX1Q142F8lFI29elxoPYjE768BEB";
 	VOICEBOXEN.PARSE_API_KEY = "HpQBA0WQ2Cxl8FFoGk5QKP3h33wL9LVPGiuwRtJ1";
 	VOICEBOXEN.PARSE_HEADERS = {
-					"X-Parse-Application-Id" : VOICEBOXEN.PARSE_APP_ID,
-					"X-Parse-REST-API-Key" : VOICEBOXEN.PARSE_API_KEY
-			};
+		"X-Parse-Application-Id" : VOICEBOXEN.PARSE_APP_ID,
+		"X-Parse-REST-API-Key" : VOICEBOXEN.PARSE_API_KEY
+	};
 
 	VOICEBOXEN.ParseSync = function(method, model, options) {
+		model.unset("createdAt");
+		model.unset("updatedAt");
 		return Backbone.sync(method, model, _.extend(options, {
 			headers : VOICEBOXEN.PARSE_HEADERS
 		}));
@@ -119,7 +121,7 @@ $(function() {
 	VOICEBOXEN.Song = Backbone.Model.extend({
 		sync : VOICEBOXEN.ParseSync,
 		idAttribute : "objectId",
-		url : "https://api.parse.com/1/classes/Song",
+		urlRoot : "https://api.parse.com/1/classes/Song",
 
 		initialize : function(attr) {
 			if(isNaN(attr.vbid) && !isNaN(attr.id)) {
@@ -130,7 +132,7 @@ $(function() {
 			}
 
 			$.ajax({
-				url : this.url,
+				url : this.urlRoot,
 				type : "GET",
 				headers : VOICEBOXEN.PARSE_HEADERS,
 				data : {
@@ -214,18 +216,19 @@ $(function() {
 						url : "https://api.parse.com/1/classes/UserSongKey",
 						type : "POST",
 						headers : VOICEBOXEN.PARSE_HEADERS,
-						data : {
+						data : JSON.stringify({
 							user : {
 								__type : "Pointer",
 								className : "_User",
-								objectId : VoiceBoxen.user.get("id")
+								objectId : VoiceBoxen.user.get("objectId")
 							},
 							song : {
 								__type : "Pointer",
 								className : "Song",
 								objectId : this.model.get("id")
 							}
-						},
+						}),
+						contentType : "application/json",
 						dataType : "json",
 						success : function(resp) {
 
