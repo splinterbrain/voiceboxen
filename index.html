@@ -28,14 +28,17 @@
 			<header>
 				<h1>Voiceboxen</h1>
 			</header>
-<!-- 				<input type="submit" id="logout_submit" value="logout" /> -->			<!-- 			<nav>
+			<!-- 				<input type="submit" id="logout_submit" value="logout" /> -->
+			<!-- 			<nav>
 			<ul>
 			<li>Search</li>
 			<li>My Library</li>
 			</ul>
 			</nav> -->
 			<section id="application">
-				<nav><a class="icon-list" href="#recent">recent</a><a class="icon-music" href="#queued"> queued</a><a class="icon-tag" href="#saved">saved</a><div class="clear"></div></nav>				
+				<nav>
+					<a class="icon-list" href="#recent">recent</a><a class="icon-music" href="#queued"> queued</a><a class="icon-tag" href="#saved">saved</a><div class="clear"></div>
+				</nav>
 				<form id="search_form">
 					<input type="text" id="search" placeholder="e.g., Empire State of Mind" name="query">
 					<input type="submit" id="search_submit" value="search">
@@ -44,9 +47,19 @@
 				<ul id="results"></ul>
 				<div class="clear"></div>
 				<section id="popup">
-					<input type="text" id="username"/><label for="username">username:</label>
-					<input type="password" id="password"/><label for="password">password:</label>
-					<div class="inputs"><input type="submit" id="login_submit" value="login" /><input type="submit" id="signup_submit" value="signup" /></div>
+					<p>
+						Voiceboxen is free. Sign up to start
+						bookmarking songs for next time
+						you get your karaoke on.
+					</p>
+					<input type="text" id="username"/>
+					<label for="username">email:</label>
+					<input type="password" id="password"/>
+					<label for="password">password:</label>
+					<div class="inputs">
+						<input type="submit" id="login_submit" value="LOG IN" />
+						<input type="submit" id="signup_submit" value="SIGN UP" />
+					</div>
 				</section>
 			</section>
 			<!-- 			<footer>
@@ -59,8 +72,9 @@
 		<script type="text/template" id="song-template">
 			<div class="song_title"><%= title %></div>
 			<div class="inputs">
-			<input type="button" class="sing" value="Sing!">
-			<input type="button" class="sing_later" value="Sing later">
+			<input type="button" class="sing" value="sing now">
+			<input type="button" class="sing_later" value="save">
+			<input type="button" class="remove" value="remove">
 			</div>
 			<div class="clear"></div>
 		</script>

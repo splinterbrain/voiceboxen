@@ -107,12 +107,20 @@ input {
 }
 #results > li > .inputs > input {
 	float: left;
-	background-color: #ffd300;
-	background-image: -webkit-linear-gradient(top, #ffd300, #ffde60);
-	border: 1px solid #06266f;
+	color: black;
+	display: block;
+	text-align: center;
+	background-color: #a0dae8;
+	border: 1px solid rgba(255,255,255,0.3);
+	box-shadow: 0px 0px 3px #eaf5f7;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 19px;
+	padding: 5px;
+	line-height:.9em;
 }
 .artist {
-	background-color: #06266f;
+	background-color: black;
 	color: #ffe773;
 	color: white;
 	padding: 3px;
@@ -125,18 +133,23 @@ input {
 	float: left;
 }
 .sing.queued {
-	background-color: green;
+
 }
 .sing_later {
 	margin-right: 0px;
 }
+
+.song > .inputs > input {
+	
+}
 #popup {
 	position: absolute;
 	border: 1px solid black;
-	width: 70%;
+	width: 90%;
 	top: 50px;
-	left: 15%;
-	background-color: white;
+	left: 5%;
+	background-color: black;
+	padding:10px;
 	transition: all 1s ease;
 	-webkit-transition: all 1s ease;
 	-moz-transition: all 1s ease;
