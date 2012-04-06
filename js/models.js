@@ -101,6 +101,25 @@ $(function() {
 			});
 			return false;
 		},
+		loadSaved : function(){
+			if(this.user == null){
+				this.presentLogin(this.loadSaved, this);
+				return;
+			}
+			$.ajax({
+				url : "https://api.parse.com/classes/UserSongKey",
+				type : "GET",
+				headers : VOICEBOXEN.PARSE_HEADERS,
+				data : {
+					where : "{\"user\" : {__type : \"Pointer\", className : \"_User\", objectId : \"" + this.user.get("objectId")  + "\"}}"
+				},
+				success : $.proxy(function(resp) {
+					if(resp.results.length > 0) {
+						this.results.reset();
+						this.results.add(resp.results);
+					}
+				}, this)
+			});		},
 		loadResults : function(data) {
 			this.results.reset();
 			this.results.add(data.songs);
@@ -117,6 +136,20 @@ $(function() {
 		idAttribute : "objectId"
 
 	});
+	
+	VOICEBOXEN.Router = Backbone.Router.extend({
+		routes : {
+			"saved" : "saved"
+		},
+		
+		saved : function(){
+			VoiceBoxen.loadSaved();
+		}
+	});
+	
+	VoiceBoxen.router = new VOICEBOXEN.Router();
+	
+	Backbone.history.start({pushState : false, root : '/voiceboxen/index.html'});
 
 	VOICEBOXEN.Song = Backbone.Model.extend({
 		sync : VOICEBOXEN.ParseSync,
