@@ -104,7 +104,7 @@ input {
 	float: right;
 	white-space: nowrap;
 }
-#results > li > .inputs > input {
+#results > li > .inputs > div {
 	float: left;
 	color: black;
 	display: block;
@@ -171,5 +171,6 @@ input {
 	clear: right;
 }
 #popup > .inputs > input {
+	max-width:65%;
 	float: right;
 }
