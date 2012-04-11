@@ -2,7 +2,7 @@
 	clear: both;
 }
 html {
-min-height:100%;
+	min-height: 100%;
 }
 body {
 	font-size: 14pt;
@@ -26,7 +26,7 @@ header > h1 {
 }
 nav {
 	margin-top: 10px;
-	margin-bottom:10px;
+	margin-bottom: 10px;
 }
 nav > a {
 	color: white;
@@ -42,18 +42,15 @@ nav > a {
 	font-size: 19px;
 	padding: 3px;
 }
-
-nav > [class^="icon-"]:before{
-	font-weight:100;
-	font-size:0.8em;
-	left:-.5em;
-	position:relative;
+nav > [class^="icon-"]:before {
+	font-weight: 100;
+	font-size: 0.8em;
+	left: -.5em;
+	position: relative;
 }
-
-nav > .icon-music:before{
-	left:-.25em;
+nav > .icon-music:before {
+	left: -.25em;
 }
-
 nav > a:first-child {
 	margin-left: 0px;
 }
@@ -63,22 +60,17 @@ input {
 	font-size: 14pt;
 	padding: 3px;
 }
-
-#search, #search_submit{
-	height:1.5em;
-	
+#search, #search_submit {
+	height: 1.5em;
 }
-
 #search {
 	float: left;
 	width: 74%;
-	margin-right:1%;
-	margin-top:2px;
+	margin-right: 1%;
+	margin-top: 2px;
 	box-shadow: 0px 0px 3px 0px white;
-	font-size:.9em;
-	
+	font-size: .9em;
 }
-
 #search_submit {
 	color: white;
 	display: block;
@@ -91,11 +83,18 @@ input {
 	font-weight: bold;
 	font-size: 19px;
 	padding: 5px;
-	line-height:.9em;
+	line-height: .9em;
 }
-#results{
-	margin-top:10px;
-	clear:both;
+#results {
+	margin-top: 10px;
+	clear: both;
+	transition : opacity 1.0s ease;
+	-webkit-transition : opacity 1.0s ease;
+	-moz-transition : opacity 1.0s ease;
+}
+
+#results.loading{
+	opacity:0.2;
 }
 
 #results > li {
@@ -117,7 +116,7 @@ input {
 	font-weight: bold;
 	font-size: 19px;
 	padding: 5px;
-	line-height:.9em;
+	line-height: .9em;
 }
 .artist {
 	background-color: black;
@@ -138,9 +137,8 @@ input {
 .sing_later {
 	margin-right: 0px;
 }
-
 .song > .inputs > input {
-	
+
 }
 #popup {
 	position: absolute;
@@ -149,7 +147,7 @@ input {
 	top: 50px;
 	left: 5%;
 	background-color: black;
-	padding:10px;
+	padding: 10px;
 	transition: all 1s ease;
 	-webkit-transition: all 1s ease;
 	-moz-transition: all 1s ease;

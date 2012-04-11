@@ -46,7 +46,7 @@ $(function() {
 						var cbContext = this.cbContext;
 						this.cbFunction = null;
 						this.cbContext = null;
-						$.proxy(cbFunction, cbContext);
+						cbFunction.call(cbContext);
 					}
 
 				}, this)
@@ -78,7 +78,7 @@ $(function() {
 						var cbContext = this.cbContext;
 						this.cbFunction = null;
 						this.cbContext = null;
-						$.proxy(cbFunction, cbContext);
+						cbFunction.call(cbContext);
 					}
 
 				}, this)
@@ -101,25 +101,35 @@ $(function() {
 			});
 			return false;
 		},
-		loadSaved : function(){
-			if(this.user == null){
+		setLoading : function(loading) {
+			if(loading) {
+				this.$el.find("#results").addClass("loading");
+			} else {
+				this.$el.find("#results").removeClass("loading");
+			}
+		},
+		loadSaved : function() {
+			if(this.user == null) {
 				this.presentLogin(this.loadSaved, this);
 				return;
 			}
+			this.setLoading(true);
 			$.ajax({
-				url : "https://api.parse.com/classes/UserSongKey",
+				url : "https://api.parse.com/1/classes/UserSongKey",
 				type : "GET",
 				headers : VOICEBOXEN.PARSE_HEADERS,
 				data : {
-					where : "{\"user\" : {__type : \"Pointer\", className : \"_User\", objectId : \"" + this.user.get("objectId")  + "\"}}"
+					where : '{"user" : {"__type" : "Pointer", "className" : "_User", "objectId" : "' + this.user.get("objectId") + '"}}',
+					include : "song"
 				},
 				success : $.proxy(function(resp) {
 					if(resp.results.length > 0) {
 						this.results.reset();
-						this.results.add(resp.results);
+						this.results.add(resp.results.map(function(key){return key.song;}));
 					}
 				}, this)
-			});		},
+			});
+		},
 		loadResults : function(data) {
 			this.results.reset();
 			this.results.add(data.songs);
@@ -136,20 +146,23 @@ $(function() {
 		idAttribute : "objectId"
 
 	});
-	
+
 	VOICEBOXEN.Router = Backbone.Router.extend({
 		routes : {
 			"saved" : "saved"
 		},
-		
-		saved : function(){
+
+		saved : function() {
 			VoiceBoxen.loadSaved();
 		}
 	});
-	
+
 	VoiceBoxen.router = new VOICEBOXEN.Router();
-	
-	Backbone.history.start({pushState : false, root : '/voiceboxen/index.html'});
+
+	Backbone.history.start({
+		pushState : false,
+		root : '/~samuels/voiceboxen/'
+	});
 
 	VOICEBOXEN.Song = Backbone.Model.extend({
 		sync : VOICEBOXEN.ParseSync,
@@ -258,7 +271,7 @@ $(function() {
 							song : {
 								__type : "Pointer",
 								className : "Song",
-								objectId : this.model.get("id")
+								objectId : this.model.get("objectId")
 							}
 						}),
 						contentType : "application/json",
@@ -297,6 +310,7 @@ $(function() {
 		},
 		render : function() {
 			this.$el.empty();
+			this.$el.removeClass("loading");
 			this.collection.forEach(this.onAddResult, this);
 		}
 	});
