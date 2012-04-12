@@ -55,9 +55,10 @@ $(function() {
 			});
 		},
 		presentLogin : function(cbFunction, cbContext) {
-			this.$el.find("#popup").addClass("visible");
+			this.$el.find("#popup_login").addClass("visible");
 			this.cbFunction = cbFunction;
 			this.cbContext = cbContext;
+			this.$el.find("#popup_login #username").focus();
 		},
 		login : function() {
 			$.ajax({

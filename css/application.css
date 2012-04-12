@@ -140,9 +140,10 @@ input {
 .song > .inputs > input {
 
 }
-#popup {
+
+.popup {
 	position: absolute;
-	border: 1px solid black;
+	border: 1px solid white;
 	width: 90%;
 	top: 50px;
 	left: 5%;
@@ -151,26 +152,40 @@ input {
 	transition: all 1s ease;
 	-webkit-transition: all 1s ease;
 	-moz-transition: all 1s ease;
-	transform: translate3d(0px, -300px, 0px);
-	-webkit-transform: translate3d(0px, -300px, 0px);
-	-moz-transform: translate3d(0px, -300px, 0px);
+	transform: translate3d(0px, -500px, 0px);
+	-webkit-transform: translate3d(0px, -500px, 0px);
+	-moz-transform: translate3d(0px, -500px, 0px);
 }
-#popup.visible {
+.popup.visible {
 	transform: translate3d(0px, 0px, 0px);
 	-webkit-transform: translate3d(0px, 0px, 0px);
 	-moz-transform: translate3d(0px, 0px, 0px);
 }
-#popup > label {
+
+.popup > p {
+	margin-bottom: 1em;
+}
+
+.popup > label {
 	float: right;
 }
-#popup > input {
+.popup > input {
 	float: right;
 }
-#popup > .inputs {
-	float: right;
-	clear: right;
+.popup > .inputs {
+	clear:both;
+	margin-top:1em;
+	text-align:center;
 }
-#popup > .inputs > input {
+.popup > .inputs > input {
 	max-width:65%;
-	float: right;
+	margin-left: 10%;
+	background-color:black;
+	border: 1px solid white;
+	color:white;
+	font-weight:bold;
+	padding:10px;
+	box-shadow: 0px 0px 15px white;
+	background-image: -webkit-linear-gradient(top, #0a081c, #0e0c20);
+	background-image: -moz-linear-gradient(top, #0a081c, #0e0c20);
 }
