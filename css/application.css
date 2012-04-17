@@ -143,6 +143,7 @@ input {
 
 .popup {
 	position: absolute;
+	z-index: 10;
 	border: 1px solid white;
 	width: 90%;
 	top: 50px;
