@@ -41,6 +41,8 @@ $(function() {
 				success : $.proxy(function(resp) {
 					var user = new VOICEBOXEN.User(resp);
 					this.user = user;
+					this.$el.find(".popup").removeClass("visible");
+
 					if(this.cbFunction) {
 						var cbFunction = this.cbFunction;
 						var cbContext = this.cbContext;
@@ -60,7 +62,8 @@ $(function() {
 			this.cbContext = cbContext;
 			this.$el.find("#popup_login #username").focus();
 		},
-		login : function() {
+		login : function(e) {
+			e.stopPropagation();
 			$.ajax({
 				url : "https://api.parse.com/1/login",
 				type : "GET",
@@ -73,8 +76,8 @@ $(function() {
 				success : $.proxy(function(resp) {
 					var user = new VOICEBOXEN.User(resp);
 					this.user = user;
-					
-					this.$el.find("#popup").removeClass("visible");
+
+					this.$el.find(".popup").removeClass("visible");
 					if(this.cbFunction) {
 						var cbFunction = this.cbFunction;
 						var cbContext = this.cbContext;
@@ -92,7 +95,7 @@ $(function() {
 			this.user = null;
 		},
 		search : function(e) {
-			
+
 			this.setLoading(true);
 			var q = $("#search").serialize();
 			//Not sure why the API needs an explicit .json but it makes it happier
@@ -129,7 +132,11 @@ $(function() {
 				success : $.proxy(function(resp) {
 					if(resp.results.length > 0) {
 						this.results.reset();
-						this.results.add(resp.results.map(function(key){var song = key.song; song.userSongKey = key.objectId; return song;}));
+						this.results.add(resp.results.map(function(key) {
+							var song = key.song;
+							song.userSongKey = key.objectId;
+							return song;
+						}));
 					}
 				}, this)
 			});
@@ -205,8 +212,7 @@ $(function() {
 			}
 			return resp;
 		},
-		
-		toJSON : function(){
+		toJSON : function() {
 			var json = Backbone.Model.prototype.toJSON.call(this);
 			delete json.userSongKey;
 			return json;
@@ -222,11 +228,10 @@ $(function() {
 			"click .sing_later" : "singLater"
 
 		},
-		
-		initialize : function(){
+
+		initialize : function() {
 			this.model.on("change", this.updateButtons, this);
 		},
-
 		render : function() {
 			// this.$el.html(this.model.get("title"));
 			this.$el.html(this.template(this.model.toJSON()));
@@ -234,17 +239,15 @@ $(function() {
 			this.updateButtons();
 			return this;
 		},
-		
 		updateButtons : function() {
-			if(this.model.has("userSongKey")){
+			if(this.model.has("userSongKey")) {
 				this.$el.find(".sing_later").text(" ");
 				this.$el.find(".sing_later").addClass("icon-tag");
-			}else{
+			} else {
 				this.$el.find(".sing_later").text("save");
 				this.$el.find(".sing_later").removeClass("icon-tag");
 			}
 		},
-		
 		sing : function() {
 			if(this.$el.hasClass("queued"))
 				return;
@@ -281,7 +284,8 @@ $(function() {
 			}
 
 			//Return if already associated
-			if(this.model.has("userSongKey")) return;
+			if(this.model.has("userSongKey"))
+				return;
 			//Save song
 			this.model.save({}, {
 				success : $.proxy(function(model, resp) {
@@ -305,7 +309,9 @@ $(function() {
 						contentType : "application/json",
 						dataType : "json",
 						success : $.proxy(function(resp) {
-							this.model.set({userSongKey : resp.objectId});
+							this.model.set({
+								userSongKey : resp.objectId
+							});
 						}, this)
 					});
 				}, this)
