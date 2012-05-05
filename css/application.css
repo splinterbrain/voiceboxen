@@ -118,6 +118,10 @@ input {
 	padding: 5px;
 	line-height: .9em;
 }
+
+#results > li > .inputs > div:hover {
+	cursor:pointer;
+}
 .artist {
 	background-color: black;
 	color: #ffe773;

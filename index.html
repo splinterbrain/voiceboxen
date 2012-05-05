@@ -30,7 +30,7 @@
 			</header>
 			<section id="application">
 				<nav>
-					<a class="icon-list" href="#recent">recent</a><a class="icon-music" href="#queued"> queued</a><a class="icon-tag" href="#saved">saved</a><div class="clear"></div>
+					<a class="icon-list" href="#recent">recent</a><a class="icon-music" href="#queued"> queued</a><a class="icon-tag" id="saved" href="#saved">saved</a><div class="clear"></div>
 				</nav>
 				<form id="search_form">
 					<input type="text" id="search" placeholder="e.g., Empire State of Mind" name="query">
@@ -67,9 +67,9 @@
 		<script type="text/template" id="song-template">
 			<div class="song_title"><%= title %></div>
 			<div class="inputs">
-			<div class="sing">sing now</div>
-			<div class="sing_later">save</div>
-			<div class="remove">remove</div>
+				<div class="sing">sing now</div>
+				<div class="sing_later">save</div>
+				<div class="remove">remove</div>
 			</div>
 			<div class="clear"></div>
 		</script>

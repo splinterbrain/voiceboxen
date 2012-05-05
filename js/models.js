@@ -18,6 +18,11 @@ $(function() {
 
 	VOICEBOXEN.Application = Backbone.View.extend({
 		events : {
+			"click #saved" : function(e) {
+				e.preventDefault();
+				this.router.navigate("saved", {trigger : true});
+				console.log("saved");
+			},
 			"submit #search_form" : "search",
 			"click #search_submit" : "search",
 			"click #signup_submit" : "signup",
@@ -41,7 +46,7 @@ $(function() {
 				success : $.proxy(function(resp) {
 					var user = new VOICEBOXEN.User(resp);
 					this.user = user;
-					this.$el.find(".popup").removeClass("visible");
+					this.removeLogin();
 
 					if(this.cbFunction) {
 						var cbFunction = this.cbFunction;
@@ -58,9 +63,15 @@ $(function() {
 		},
 		presentLogin : function(cbFunction, cbContext) {
 			this.$el.find("#popup_login").addClass("visible");
+			this.$el.find("#results").hide();
 			this.cbFunction = cbFunction;
 			this.cbContext = cbContext;
 			this.$el.find("#popup_login #username").focus();
+		},
+		removeLogin : function() {
+			this.$el.find(".popup").removeClass("visible");
+			this.$el.find("#results").show();
+
 		},
 		login : function(e) {
 			e.stopPropagation();
@@ -76,8 +87,7 @@ $(function() {
 				success : $.proxy(function(resp) {
 					var user = new VOICEBOXEN.User(resp);
 					this.user = user;
-
-					this.$el.find(".popup").removeClass("visible");
+					this.removeLogin();
 					if(this.cbFunction) {
 						var cbFunction = this.cbFunction;
 						var cbContext = this.cbContext;
@@ -98,6 +108,7 @@ $(function() {
 
 			this.setLoading(true);
 			var q = $("#search").serialize();
+			this.router.navigate("search/" + $("#search").val());
 			//Not sure why the API needs an explicit .json but it makes it happier
 			$.ajax({
 				url : "http://vbsongs.com/api/v1/songs/search.json?" + q + "&per_page=100&page=1",
@@ -160,11 +171,16 @@ $(function() {
 
 	VOICEBOXEN.Router = Backbone.Router.extend({
 		routes : {
-			"saved" : "saved"
+			"saved" : "saved",
+			"search/:query" : "search"
 		},
 
 		saved : function() {
 			VoiceBoxen.loadSaved();
+		},
+		search : function(q) {
+			$("#search").val(q);
+			VoiceBoxen.search();
 		}
 	});
 
@@ -240,6 +256,21 @@ $(function() {
 			return this;
 		},
 		updateButtons : function() {
+			var state = Backbone.history.fragment;
+			if(state == "saved") {
+				this.$el.find(".sing_later").hide();
+				this.$el.find(".sing").show();
+				this.$el.find(".remove").show();
+			} else if(state == "queued") {
+				this.$el.find(".sing_later").show();
+				this.$el.find(".sing").hide();
+				this.$el.find(".remove").hide();
+			} else {
+				this.$el.find(".sing_later").show();
+				this.$el.find(".remove").hide();
+				this.$el.find(".sing").show();
+
+			}
 			if(this.model.has("userSongKey")) {
 				this.$el.find(".sing_later").text(" ");
 				this.$el.find(".sing_later").addClass("icon-tag");
