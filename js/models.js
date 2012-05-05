@@ -23,7 +23,12 @@ $(function() {
 				this.router.navigate("saved", {
 					trigger : true
 				});
-				console.log("saved");
+			},
+			"click #queued" : function(e) {
+				e.preventDefault();
+				this.router.navigate("queued", {
+					trigger : true
+				});
 			},
 			"submit #search_form" : "search",
 			"click #search_submit" : "search",
@@ -446,8 +451,8 @@ $(function() {
 		el : $("#results")
 	});
 
-	var test = JSON.parse($("#testdata").html());
-	VoiceBoxen.results.reset(test.songs);
+	// var test = JSON.parse($("#testdata").html());
+	// VoiceBoxen.results.reset(test.songs);
 	// VoiceBoxen.resultsView.render();
 
 });
