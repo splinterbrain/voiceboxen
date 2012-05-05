@@ -20,7 +20,9 @@ $(function() {
 		events : {
 			"click #saved" : function(e) {
 				e.preventDefault();
-				this.router.navigate("saved", {trigger : true});
+				this.router.navigate("saved", {
+					trigger : true
+				});
 				console.log("saved");
 			},
 			"submit #search_form" : "search",
@@ -152,6 +154,32 @@ $(function() {
 				}, this)
 			});
 		},
+		loadQueue : function(){
+			if(VoiceBoxen.room_code == '') {
+				var code = prompt("Please enter your room code");
+				if(code !== null && code !== '') {
+					VoiceBoxen.room_code = code.toUpperCase();
+				} else {
+					return;
+				}
+			}
+			$.ajax({
+				url : "http://vbsongs.com/api/v1/queue.json",
+				type : "GET",
+				data : {
+					room_code : VoiceBoxen.room_code
+				},
+				dataType : "json",
+				success : function(resp) {
+					loadResults(resp);
+				}
+			}).error($.proxy(function(resp) {
+				if(resp.status == 403) {
+					VoiceBoxen.room_code = '';
+					this.loadQueue();
+				}
+			}, this));
+		},
 		loadResults : function(data) {
 			this.results.reset();
 			this.results.add(data.songs);
@@ -172,11 +200,15 @@ $(function() {
 	VOICEBOXEN.Router = Backbone.Router.extend({
 		routes : {
 			"saved" : "saved",
+			"queued" : "queued",
 			"search/:query" : "search"
 		},
 
 		saved : function() {
 			VoiceBoxen.loadSaved();
+		},
+		queued : function(){
+			VoiceBoxen.loadQueue();
 		},
 		search : function(q) {
 			$("#search").val(q);
@@ -241,7 +273,8 @@ $(function() {
 		template : _.template($("#song-template").html()),
 		events : {
 			"click .sing" : "sing",
-			"click .sing_later" : "singLater"
+			"click .sing_later" : "singLater",
+			"click .remove" : "remove"
 
 		},
 
@@ -285,7 +318,7 @@ $(function() {
 			if(VoiceBoxen.room_code == '') {
 				var code = prompt("Please enter your room code");
 				if(code !== null && code !== '') {
-					VoiceBoxen.room_code = code;
+					VoiceBoxen.room_code = code.toUpperCase();
 				} else {
 					return;
 				}
@@ -348,6 +381,34 @@ $(function() {
 				}, this)
 			});
 
+		},
+		remove : function() {
+			$.ajax({
+				url : "https://api.parse.com/1/classes/UserSongKey",
+				type : "GET",
+				headers : VOICEBOXEN.PARSE_HEADERS,
+				data : {
+					where : '{"user" : {"__type" : "Pointer", "className" : "_User", "objectId" : "' + VoiceBoxen.user.get("objectId") + '"}, "song" : {"__type" : "Pointer", "className" : "Song", "objectId" : "' + this.model.get("objectId") + '"}}',
+					include : "song"
+				},
+				success : $.proxy(function(resp) {
+					_.each(resp.results, function(key) {
+						$.ajax({
+							url : "https://api.parse.com/1/classes/UserSongKey/" + key.objectId,
+							headers : VOICEBOXEN.PARSE_HEADERS,
+							type : "DELETE"
+						});
+					});
+					this.model.unset("userSongKey");
+					if(Backbone.history.fragment == "saved"){
+						VoiceBoxen.results.remove(this);
+						if(this.$el.prev().hasClass("artist") && (this.$el.next().hasClass("artist") || this.$el.is(":last-child"))){
+							this.$el.prev().detach();
+						}
+						this.$el.detach();
+					}
+				}, this)
+			})
 		}
 	});
 
